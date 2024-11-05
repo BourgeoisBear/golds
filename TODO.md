@@ -4,6 +4,8 @@
 
 * io.Writer.Write method is linked to wrong source position.
 
+* generate each module docs in individual folders with module names
+
 * Copy name links, such as https://docs.go101.org/std/pkg/io.html#name-Writer
 
 * support "golds [:tip | 1.m.n] ..." 

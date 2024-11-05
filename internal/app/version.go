@@ -12,9 +12,9 @@ import (
 	"go101.org/golds/internal/util"
 )
 
-const RoughBuildTime = "2024-12-05"
+const RoughBuildTime = "2024-11-05"
 
-const Version = "v0.7.0-preview"
+const Version = "v0.7.0"
 
 func releaseGolds() {
 	if _, err := util.RunShell(time.Minute*3, "", nil, "go", "test", "./..."); err != nil {
