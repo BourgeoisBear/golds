@@ -178,17 +178,24 @@ func (ds *docServer) writePackagesForListing(page *htmlPage, packages []*Package
 				pkg.Path,
 			)
 		} else {
+			var slashOrBlank = ""
 			if pkg.Prefix != "" {
+				var prefix = pkg.Prefix
+				if strings.HasSuffix(pkg.Prefix, "/") {
+					prefix = pkg.Prefix[0 : len(pkg.Prefix)-1]
+					slashOrBlank = "/"
+				}
 				fmt.Fprintf(page,
 					`<a href="%s" class="path-duplicate">%s</a>`,
 					buildPageHref(page.PathInfo, createPagePathInfo1(ResTypePackage, pkg.Path), nil, ""),
-					pkg.Prefix,
+					prefix,
 				)
 			}
 			if pkg.Remaining != "" {
 				fmt.Fprintf(page,
-					`<a href="%s">%s</a>`,
+					`<a href="%s">%s%s</a>`,
 					buildPageHref(page.PathInfo, createPagePathInfo1(ResTypePackage, pkg.Path), nil, ""),
+					slashOrBlank,
 					pkg.Remaining,
 				)
 			}
