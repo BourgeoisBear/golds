@@ -147,6 +147,10 @@ func run() {
 			wdPkgsListingManner = server.WdPkgsListingManner_general
 		}
 	case server.WdPkgsListingManner_promoted:
+		if *emphasizeWdPackagesFlag {
+			log.Println("Note: The -emphasize-wdpkgs option has been depreciated by -wdpkgs-listing=promoted")
+			log.Println()
+		}
 	case server.WdPkgsListingManner_general:
 		fallthrough
 	case server.WdPkgsListingManner_solo:
@@ -154,10 +158,6 @@ func run() {
 			log.Fatalln("emphasize-wdpkgs and wdpkgs-listing options conflict")
 			//return
 		}
-	}
-	if wdPkgsListingManner == server.WdPkgsListingManner_promoted || *emphasizeWdPackagesFlag {
-		log.Println("Note: The -emphasize-wdpkgs option has been depreciated by -wdpkgs-listing=promoted")
-		log.Println()
 	}
 
 	footerShowingManner := *footerShowingMannerFlag

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -8,9 +9,11 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"sync"
 	"sync/atomic"
+	"syscall"
 	"time"
 
 	"golang.org/x/text/language"
@@ -130,6 +133,7 @@ NextTry:
 		}
 		log.Fatal(err)
 	}
+	defer l.Close()
 
 	go func() {
 		ds.analyze(args, options, toolchain, false, printUsage)
@@ -145,11 +149,25 @@ NextTry:
 		}
 	}
 
-	(&http.Server{
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	var server = &http.Server{
 		Handler:      ds,
 		WriteTimeout: 5 * time.Second,
 		ReadTimeout:  5 * time.Second,
-	}).Serve(l)
+	}
+
+	go func() {
+		if err := server.Serve(l); err != nil {
+		}
+	}()
+
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+	}
 }
 
 var sem = make(chan struct{}, 10)
