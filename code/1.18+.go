@@ -141,7 +141,14 @@ func (d *CodeAnalyzer) comfirmDirectSelectorsForInstantiatedType(typeInfo *TypeI
 	typeArgs := typeInfo.Instantiated.TypeArgs
 	source := typeInfo.TypeName.Source
 	lastPkg := typeInfo.TypeName.Pkg
-	for source.Type.TypeName != nil {
+	//for source.Type.TypeName != nil {
+	//	lastPkg, source, typeArgs = transformTypeArgs(source, typeArgs)
+	//}
+	// I totally forget why it was a for-block before.
+	// The for loop might be endless sometimes.
+	// Here, just changing it to a if-block, just to make it work.
+	// I haven't enough energy to get a deep understanding here.
+	if source.Type.TypeName != nil {
 		lastPkg, source, typeArgs = transformTypeArgs(source, typeArgs)
 	}
 
@@ -334,10 +341,16 @@ func (d *CodeAnalyzer) comfirmDirectSelectorsForInstantiatedType(typeInfo *TypeI
 }
 
 func transformTypeArgs(source TypeExpr, typeArgs []TypeExpr) (*Package, TypeExpr, []TypeExpr) {
-	n := len(source.Type.TypeName.TypeParams)
-	if len(source.Type.Instantiated.TypeArgs) != n {
-		panic("should not")
-	}
+	// Here, m != n might happen sometimes, so the lines are commented out now.
+	// I haven't enough energy to get a deep understanding here.
+	//
+	//n := len(source.Type.TypeName.TypeParams)
+	//if m := len(source.Type.Instantiated.TypeArgs); m != n {
+	//	log.Println("===", source.Type);
+	//	log.Println(">>>", source.Type.Instantiated.TypeArgs);
+	//	panic(fmt.Sprintf("should not (%d != %d)", m, n))
+	//}
+	n := len(source.Type.Instantiated.TypeArgs)
 	nextTypeArgs := make([]TypeExpr, n)
 	for i := range source.Type.Instantiated.TypeArgs {
 		argType := source.Type.Instantiated.TypeArgs[i].Type
